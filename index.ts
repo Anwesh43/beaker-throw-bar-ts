@@ -210,3 +210,25 @@ class BeakerThrowBar {
         this.curr.startUpdating(cb)
     }
 }
+
+class Renderer {
+
+    btb : BeakerThrowBar = new BeakerThrowBar()
+    animator : Animator = new Animator()
+
+    render(context : CanvasRenderingContext2D) {
+        this.btb.draw(context)
+    }
+
+    handleTap(cb : Function) {
+        this.btb.startUpdating(() => {
+            this.animator.start(() => {
+                cb()
+                this.btb.update(() => {
+                    this.animator.stop()
+                    cb()
+                })
+            })
+        })
+    }
+}
