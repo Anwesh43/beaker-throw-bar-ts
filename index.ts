@@ -44,9 +44,13 @@ class DrawingUtil {
     static drawThrowBar(context : CanvasRenderingContext2D, scale : number) {
         const size : number = Math.min(w, h) / sizeFactor 
         const sf : number = ScaleUtil.sinify(scale)
-        const y : number = size / 2 - (h / 2) * sf
+        const sf1 : number = ScaleUtil.divideScale(sf, lines, parts)
+        const sf2 : number = ScaleUtil.divideScale(sf, lines + 1, parts)
+        const sf3 : number = ScaleUtil.divideScale(sf, lines + 2, parts)
+        const y : number = size / 2 * (1 - sf1)- (h / 2) * sf3
         context.save()
         context.translate(w / 2, h / 2)
+        context.rotate(deg * sf2)
         for (var j = 0; j < lines; j++) {
             const sfj : number = ScaleUtil.divideScale(sf, j, parts)
             context.save()
@@ -55,6 +59,7 @@ class DrawingUtil {
             DrawingUtil.drawLine(context, 0,  0, 0, size * sfj)
             context.restore()
         }
+        context.fillRect(-size / 2, y, size, size / 2)
         context.restore()
     }
 
