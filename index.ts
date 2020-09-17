@@ -15,6 +15,8 @@ const colors : Array<string> = [
     "#FFEB3B"
 ]
 const foreColor : string = "#bdbdbd"
+const gapDeg : number = Math.PI / 2
+const deg : number = Math.PI 
 
 class ScaleUtil {
 
@@ -28,5 +30,39 @@ class ScaleUtil {
 
     static sinify(scale : number) : number {
         return Math.sin(scale * Math.PI)
+    }
+}
+
+class DrawingUtil {
+
+    static drawLine(context : CanvasRenderingContext2D, x1 : number, y1 : number, x2 : number, y2 : number) {
+        context.beginPath()
+        context.moveTo(x1, y1)
+        context.lineTo(x2, y2)
+        context.stroke()
+    }
+
+    static drawThrowBar(context : CanvasRenderingContext2D, scale : number) {
+        const size : number = Math.min(w, h) / sizeFactor 
+        const sf : number = ScaleUtil.sinify(scale)
+        const y : number = size / 2 - (h / 2) * sf
+        context.save()
+        context.translate(w / 2, h / 2)
+        for (var j = 0; j < lines; j++) {
+            const sfj : number = ScaleUtil.divideScale(sf, j, parts)
+            context.save()
+            context.rotate(sfj * Math.PI / 2)
+            context.translate(size / 2, -size / 2)
+            DrawingUtil.drawLine(context, 0,  0, 0, size * sfj)
+            context.restore()
+        }
+        context.restore()
+    }
+
+    static drawTBNode(context : CanvasRenderingContext2D, i : number, scale : number) {
+        context.lineCap = 'round'
+        context.lineWidth = Math.min(w, h) / strokeFactor 
+        context.strokeStyle = colors[i]
+        DrawingUtil.drawThrowBar(context, scale)
     }
 }
