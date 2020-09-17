@@ -35,6 +35,9 @@ class ScaleUtil {
 class DrawingUtil {
 
     static drawLine(context : CanvasRenderingContext2D, x1 : number, y1 : number, x2 : number, y2 : number) {
+        if (x1 == x2 && y1 == y2) {
+            return
+        }
         context.beginPath()
         context.moveTo(x1, y1)
         context.lineTo(x2, y2)
@@ -54,12 +57,12 @@ class DrawingUtil {
         for (var j = 0; j < lines; j++) {
             const sfj : number = ScaleUtil.divideScale(sf, j, parts)
             context.save()
-            context.rotate(sfj * Math.PI / 2)
+            context.rotate(j * Math.PI / 2)
             context.translate(size / 2, -size / 2)
             DrawingUtil.drawLine(context, 0,  0, 0, size * sfj)
             context.restore()
         }
-        context.fillRect(-size / 2, y, size, size / 2)
+        context.fillRect(-size / 2, y, size, (size / 2) * sf1)
         context.restore()
     }
 
@@ -67,6 +70,7 @@ class DrawingUtil {
         context.lineCap = 'round'
         context.lineWidth = Math.min(w, h) / strokeFactor 
         context.strokeStyle = colors[i]
+        context.fillStyle = colors[i]
         DrawingUtil.drawThrowBar(context, scale)
     }
 }
